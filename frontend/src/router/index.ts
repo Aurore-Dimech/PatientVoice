@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Search from "../views/Search.vue";
+import Search from "../views/Centers.vue";
 import Accueil from "../views/Accueil.vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,8 +10,8 @@ const router = createRouter({
 			component: Accueil,
 		},
 		{
-			path: "/search",
-			name: "Search",
+			path: "/centers",
+			name: "Centers",
 			component: Search,
 		},
 	],
