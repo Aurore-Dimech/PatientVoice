@@ -2,22 +2,33 @@
 
 namespace App\Models\Answers;
 
-use App\Models\Center;
+use App\Models\Question;
+use App\Models\Answers\Form;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Answer extends Model
 {
     use HasUuids;
 
-    public function center(): BelongsTo
+    protected $fillable = [
+        'content',
+    ];
+    protected function casts(): array
     {
-        return $this->belongsTo(Center::class);
+        return [
+            'content' => 'string',
+        ];
     }
-    public function contents(): HasMany
+
+    public function form(): BelongsTo
     {
-        return $this->hasMany(AnswerContent::class);
+        return $this->belongsTo(Form::class);
+    }
+
+    public function question(): BelongsTo
+    {
+        return $this->belongsTo(Question::class);
     }
 }

@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('center_id')->constrained('centers', 'id')->cascadeOnDelete();
+            $table->foreignUuid('form_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
+            $table->text('content');
             $table->timestamps();
         });
     }

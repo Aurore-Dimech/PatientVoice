@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('answers_content', function (Blueprint $table) {
+        Schema::create('forms', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('answer_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('question_id')->constrained()->cascadeOnDelete();
-            $table->text('content');
+            $table->foreignUuid(column: 'center_id')->constrained('centers', 'id')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('answers_content');
+        Schema::dropIfExists('forms');
     }
 };

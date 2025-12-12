@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Answers\Answer;
+use App\Models\Answers\Form;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,8 +28,8 @@ class Center extends Model
         ];
     }
 
-    public function answers(): HasMany
+    public function forms(): HasMany
     {
-        return $this->hasMany(Answer::class);
+        return $this->hasMany(Form::class);
     }
 }

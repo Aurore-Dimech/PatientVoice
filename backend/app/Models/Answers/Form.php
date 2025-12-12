@@ -1,27 +1,22 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Answers;
 
+use App\Models\Center;
 use App\Models\Answers\Answer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Question extends Model
+class Form extends Model
 {
-    protected function casts(): array
-    {
-        return [
-            'content' => 'string',
-            'is_active' => 'boolean',
-        ];
-    }
+    use HasUuids;
 
-    public function theme(): BelongsTo
+    public function center(): BelongsTo
     {
-        return $this->belongsTo(Theme::class);
+        return $this->belongsTo(Center::class);
     }
-
     public function answers(): HasMany
     {
         return $this->hasMany(Answer::class);
