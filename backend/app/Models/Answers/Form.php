@@ -13,6 +13,10 @@ class Form extends Model
 {
     use HasUuids;
 
+    protected $fillable = [
+        'center_id'
+    ];
+
     public function center(): BelongsTo
     {
         return $this->belongsTo(Center::class);

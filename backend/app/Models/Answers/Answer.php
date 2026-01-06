@@ -14,6 +14,8 @@ class Answer extends Model
 
     protected $fillable = [
         'content',
+        'form_id',
+        'question_id'
     ];
     protected function casts(): array
     {
