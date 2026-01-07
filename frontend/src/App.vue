@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import Header from './views/Header.vue';
+import Footer from './views/Footer.vue';
 </script>
 
 <template>
@@ -9,6 +10,7 @@ import Header from './views/Header.vue';
     <div class="flex-1">
       <RouterView />
     </div>
+    <Footer />
   </div>
 </template>
 
