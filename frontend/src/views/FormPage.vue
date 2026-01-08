@@ -1,17 +1,17 @@
 <template>
-    <div>
+    <div class="bg-gray-50 min-h-screen p-8">
         <h1 class="text-2xl font-bold mb-4">Formulaire de Questions</h1>
         <form action="Actionnalité">
-            <fieldset v-for="theme in themes" :key="theme">
-                <legend>Thème {{ theme }}</legend>
-                <div v-for="question in questions.filter(q => q.theme === theme)" :key="question.id" class="mb-6 p-4 border rounded">
+            <fieldset v-for="theme in themes" :key="theme" class="bg-white border-2 border-cyan-700/100 rounded-xl p-8 mb-6">
+                <legend class="px-6">Thème {{ theme }}</legend>
+                <div v-for="question in questions.filter(q => q.theme === theme)" :key="question.id" class="mb-4 px-4">
                     <h2 class="text-lg font-semibold mb-2">{{ question.theme }}</h2>
                     <label class="block mb-2" :for="'question-' + question.id">{{ question.text }}</label>
                     <textarea 
                         v-if="question.answerType === 'text'" 
                         :id="'question-' + question.id"
                         :name="question.name" 
-                        class="border p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        class="border border-cyan-700/100 p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                     ></textarea>
                     <div v-else-if="question.answerType === 'radio'">
                         <label class="mr-4">
