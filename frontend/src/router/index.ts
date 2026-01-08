@@ -29,4 +29,15 @@ const router = createRouter({
 	],
 });
 
+router.afterEach(() => {
+  // On retire le focus de l’élément actif
+  if (document.activeElement instanceof HTMLElement) {
+    document.activeElement.blur();
+  }
+  // On met temporairement un tabindex sur le body pour pouvoir lui donner le focus
+  document.body.setAttribute('tabindex', '-1');
+  document.body.focus();
+  setTimeout(() => document.body.removeAttribute('tabindex'), 100);
+});
+
 export default router;
