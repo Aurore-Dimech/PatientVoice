@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Centers from "../views/Centers.vue";
 import Accueil from "../views/Accueil.vue";
 import CenterDetails from "../views/CenterDetails.vue";
+import Contact from "../views/Contact.vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
@@ -20,6 +21,11 @@ const router = createRouter({
 		name: "CenterDetails",
 		component: CenterDetails,
 		},
+		{
+			path: "/contact",
+			name: "Contact",
+			component: Contact,
+		}
 	],
 });
 
