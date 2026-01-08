@@ -3,9 +3,8 @@
         <h1 class="text-2xl font-bold mb-4">Formulaire de Questions</h1>
         <form action="Actionnalité">
             <fieldset v-for="theme in themes" :key="theme" class="bg-white border-2 border-cyan-700/100 rounded-xl p-8 mb-6">
-                <legend class="px-6">Thème {{ theme }}</legend>
+                <legend class="px-6 text-lg font-semibold">Thème {{ theme }}</legend>
                 <div v-for="question in questions.filter(q => q.theme === theme)" :key="question.id" class="mb-4 px-4">
-                    <h2 class="text-lg font-semibold mb-2">{{ question.theme }}</h2>
                     <label class="block mb-2" :for="'question-' + question.id">{{ question.text }}</label>
                     <textarea 
                         v-if="question.answerType === 'text'" 
