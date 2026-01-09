@@ -16,6 +16,6 @@
     "moduleResolution": "node",
     "types": ["node"],
 
-    "allowJs": true
+    // "allowJs": true
   }
 }
