@@ -14,23 +14,28 @@ export default {
         }
     ],
     "Questions": [
+
+    ],
+    "Themes": [
         {
+            name: "Hébergement",
+            questions: [
+            ]
+        },
+        {
+            name: "Nourriture",
+            questions: [
+                        {
             "id": 3,
-            "theme": "Nourriture",
-            "text": "Comment évalueriez-vous la qualité générale des repas servis ?",
-            "answerType": "text",
-            "name": "quality_of_meals"
+            "name": "Comment évalueriez-vous la qualité générale des repas servis ?",
+
         },
         {
             "id": 4,
-            "theme": "Nourriture",
-            "text": "Le centre prend-il en compte vos restrictions alimentaires / allergies ?",
-            "answerType": "text",
-            "name": "dietary_restrictions"
+            "name": "Le centre prend-il en compte vos restrictions alimentaires / allergies ?",
+            
         }
-    ],
-    "Themes": [
-        "Hébergement",
-        "Nourriture",
+            ]
+        }
     ]
 }
