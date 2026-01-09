@@ -13,9 +13,9 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
 
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "node",
     "types": ["node"],
 
-     "allowJs": true
+    "allowJs": true
   }
 }
