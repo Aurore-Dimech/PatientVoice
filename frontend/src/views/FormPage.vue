@@ -28,19 +28,12 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import mockData from '../assets/mockData'
+import type { Theme } from '@/assets/typings';
 
 const route = useRoute();
 const router = useRouter();
 const centerId = Number(route.params.id);
 
-type Question = {
-    id: number,
-    name: string,
-}
-type Theme = {
-    name: string,
-    questions: Array<Question>,
-}
 
 // Store answers with question ID as key
 const answers = ref<Record<number, string>>({});
