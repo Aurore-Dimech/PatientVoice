@@ -61,31 +61,21 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+// @ts-expect-error import
 import CenterCard from './components/CenterCard.vue'
 import { RouterLink } from 'vue-router'
+import mockData from '../assets/mockData'
+import { ref } from 'vue';
+import type { Center } from '@/assets/typings';
 
-const centers = [
-    {
-        id: 1,
-        name: 'Centre de Rééducation des Batignolles',
-        address: '15 rue des Armées',
-        cityZip: '75015 Paris',
-        image: 'https://placehold.co/320x140'
-    },
-    {
-        id: 2,
-        name: 'Institut Fonctionnel Lumière',
-        address: '10 avenue des Lumières',
-        cityZip: '69008 Lyon',
-        image: 'https://placehold.co/320x140'
-    },
-    {
-        id: 3,
-        name: 'Clinique de Réadaptation du Vieux Port',
-        address: '5 rue du Vieux Port',
-        cityZip: '13002 Marseille',
-        image: 'https://placehold.co/320x140'
-    },
-]
+const centers = ref<Array<Center>>([])
+const getCenters = async () => {
+    // const response = await fetch('http://localhost:3000/centers')
+    const data = mockData
+    centers.value = data.Centres
+    // const data = await response.json()
+    console.log(data)
+}
+getCenters()
 </script>
