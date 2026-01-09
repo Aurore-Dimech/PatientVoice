@@ -14,11 +14,19 @@ class DisplayFormController extends Controller
             $query->isActive();
         }])->get();
 
-        $data = $themes->mapWithKeys(function ($theme) {
+        $data = $themes->values()->map(function ($theme) {
             return [
-                $theme->name => $theme->questions->pluck('content', 'id')->toArray()
+                'name' => $theme->name,
+                'questions' => $theme->questions->values()->map(function ($question) {
+                    return [
+                        'id' => (string) $question->id,
+                        'name' => $question->content,
+                    ];
+                })->toArray(),
             ];
-        });
+        })->toArray();
+
+        return $data;
         
         return $data;
     }
