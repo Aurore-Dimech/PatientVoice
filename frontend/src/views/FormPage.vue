@@ -46,14 +46,6 @@ type Theme = {
 const answers = ref<Record<number, string>>({});
 const isSubmitting = ref(false);
 
-const questions = ref<Array<Question>>([])
-const getQuestions = async () => {
-    // const response = await fetch(`http://localhost:3000/centers/${centerId}/questions`)
-    const data = mockData
-    questions.value = data.Questions
-    // const data = await response.json()
-    console.log(data)
-}
 const themes = ref<Array<Theme>>([])
 const getThemes = async () => {
     // const response = await fetch(`http://localhost:3000/centers/${centerId}/themes`)
@@ -63,7 +55,6 @@ const getThemes = async () => {
     console.log(data)
 }
 getThemes()
-getQuestions()
 
 const submit = async () => {
     try {
@@ -75,7 +66,7 @@ const submit = async () => {
             content: answer
         }));
         console.log('Formatted Answers:', formattedAnswers);
-        // Make the POST request
+
         // const response = await fetch(`http://localhost:3000/centers/${centerId}/answers`, {
         //     method: 'POST',
         //     headers: {
@@ -94,7 +85,7 @@ const submit = async () => {
         // const result = await response.json();
         // console.log('Form submitted successfully:', result);
         
-        // router.push('/');
+        router.push('/center/' + centerId);
         
     } catch (error) {
         console.error('Error submitting form:', error);
