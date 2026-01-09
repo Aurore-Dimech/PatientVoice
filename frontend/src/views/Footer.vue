@@ -12,13 +12,13 @@
       <nav aria-label="Liens rapides" class="flex flex-col items-start md:items-end">
         <span class="font-semibold text-gray-800 mb-2">Liens rapides</span>
         <div class="flex flex-col space-y-1">
-          <a href="/"
-            class="text-gray-500 hover:underline text-base focus:outline-none focus:ring-2 focus:ring-blue-400">Accueil</a>
-          <a href="/centers"
+          <RouterLink to="/"
+            class="text-gray-500 hover:underline text-base focus:outline-none focus:ring-2 focus:ring-blue-400">Accueil</RouterLink>
+          <RouterLink to="/centers"
             class="text-gray-500 hover:underline text-base focus:outline-none focus:ring-2 focus:ring-blue-400">Les
-            centres</a>
-          <a href="/contact"
-            class="text-gray-500 hover:underline text-base focus:outline-none focus:ring-2 focus:ring-blue-400">Contact</a>
+            centres</RouterLink>
+          <RouterLink to="/contact"
+            class="text-gray-500 hover:underline text-base focus:outline-none focus:ring-2 focus:ring-blue-400">Contact</RouterLink>
         </div>
       </nav>
     </div>
