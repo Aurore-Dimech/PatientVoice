@@ -6,6 +6,10 @@ use App\Http\Controllers\DisplayFormController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/health', function () {
+    return 'Hello World';
+});
+
 Route::controller(CenterController::class)->group(function () {
     Route::get('/centers', 'index');
     Route::get('/centers/{center}', 'show');
