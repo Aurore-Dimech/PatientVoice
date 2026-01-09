@@ -27,7 +27,6 @@ class DisplayFormController extends Controller
         })->toArray();
 
         return $data;
-        
-        return $data;
+
     }
 }
