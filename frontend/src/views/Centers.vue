@@ -1,6 +1,85 @@
 <template>
-    <h2>Page Recherche</h2>
+  <div class="p-8 bg-gray-50 min-h-screen">
+    <div class="mb-10 text-center">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">Parcourir les centres</h2>
+      <p class="text-xl text-gray-500">
+        Et faire entendre votre voix..
+      </p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+      <CenterCard
+        v-for="(center, idx) in centers"
+        :key="center.id"
+        :id="center.id"
+        :name="center.name"
+        :address="center.address"
+        :cityZip="center.cityZip"
+        :image="center.image"
+      />
+    </div>
+  </div>
 </template>
-<script setup>
 
-</script>   
+<script setup>
+import CenterCard from './components/CenterCard.vue'
+
+const centers = [
+  {
+    id: 1,
+    name: 'Centre de Rééducation des Batignolles',
+    address: '15 rue des Armées',
+    cityZip: '75015 Paris',
+    image: 'https://placehold.co/320x140'
+  },
+  {
+    id: 2,
+    name: 'Institut Fonctionnel Lumière',
+    address: '10 avenue des Lumières',
+    cityZip: '69008 Lyon',
+    image: 'https://placehold.co/320x140'
+  },
+  {
+    id: 3,
+    name: 'Clinique de Réadaptation du Vieux Port',
+    address: '5 rue du Vieux Port',
+    cityZip: '13002 Marseille',
+    image: 'https://placehold.co/320x140'
+  },
+  {
+    id: 4,
+    name: 'Centre de Rééducation Atlantique',
+    address: '22 boulevard des Dunes',
+    cityZip: '44300 Nantes',
+    image: 'https://placehold.co/320x140'
+  },
+  {
+    id: 5,
+    name: 'Pôle Fonctionnel Saint-Vincent',
+    address: '8 rue des Jardins',
+    cityZip: '59000 Lille',
+    image: 'https://placehold.co/320x140'
+  },
+  {
+    id: 6,
+    name: 'Institut de Réadaptation Provence Santé',
+    address: '14 chemin des Oliviers',
+    cityZip: '13100 Aix-en-Provence',
+    image: 'https://placehold.co/320x140'
+  },
+  {
+    id: 7,
+    name: 'Centre Thérapeutique Montagne Bleue',
+    address: '6 avenue des Mélèzes',
+    cityZip: '74000 Annecy',
+    image: 'https://placehold.co/320x140'
+  },
+  {
+    id: 8,
+    name: 'Maison de Rééducation des Ternes',
+    address: '19 rue Guersant',
+    cityZip: '75017 Paris',
+    image: 'https://placehold.co/320x140'
+  }
+]
+
+</script>
