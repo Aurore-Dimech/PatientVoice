@@ -1,6 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { RouterView } from 'vue-router';
+
+// @ts-expect-error import
 import Header from './views/Header.vue';
+
+// @ts-expect-error import
 import Footer from './views/Footer.vue';
 </script>
 

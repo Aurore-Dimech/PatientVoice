@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
+// @ts-expect-error import
 import Centers from "../views/Centers.vue";
+// @ts-expect-error import
 import Accueil from "../views/Accueil.vue";
 import CenterDetails from "../views/CenterDetails.vue";
 import Contact from "../views/Contact.vue";
