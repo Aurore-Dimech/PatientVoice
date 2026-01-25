@@ -19,7 +19,11 @@
                 </div>
                 <div>
                     <span class="font-semibold text-gray-800">Téléphone</span><br>
-                    <a href="tel:0102030405" class="text-cyan-700 underline">01 02 03 04 05</a>
+                    <a
+                        href="tel:0102030405"
+                        class="text-cyan-700 underline rounded transition-colors
+                               focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:bg-yellow-300 focus-visible:text-black focus-visible:shadow-none"
+                    >01 02 03 04 05</a>
                 </div>
             </div>
             <div class="flex items-start">
@@ -32,7 +36,11 @@
                 </div>
                 <div>
                     <span class="font-semibold text-gray-800">Email</span><br>
-                    <a href="mailto:contact@patientvoice.fr" class="text-cyan-700 underline">contact@patientvoice.fr</a>
+                    <a
+                        href="mailto:contact@patientvoice.fr"
+                        class="text-cyan-700 underline rounded transition-colors
+                               focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:bg-yellow-300 focus-visible:text-black focus-visible:shadow-none"
+                    >contact@patientvoice.fr</a>
                 </div>
             </div>
         </section>
