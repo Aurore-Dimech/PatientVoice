@@ -1,7 +1,7 @@
 <template>
   <div class="p-8 bg-gray-50 min-h-screen">
     <div class="mb-10 text-center">
-      <h2 class="text-4xl font-bold text-gray-900 mb-4">Parcourir les centres</h2>
+      <h2 class="text-4xl font-bold text-gray-900 mb-4" aria-label="Parcourir les centres">Parcourir les centres</h2>
       <p class="text-xl text-gray-500">
         Et faire entendre votre voix..
       </p>

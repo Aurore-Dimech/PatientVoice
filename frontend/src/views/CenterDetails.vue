@@ -27,16 +27,11 @@
         <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-4">Services proposés</h2>
             <div class="flex flex-wrap gap-4">
-                <span class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold">Kinésithérapie</span>
-                <span class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold">Rééducation
-                    neurologique</span>
-                <span class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold">Rééducation
-                    orthopédique</span>
-                <span class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold">Ergothérapie</span>
-                <span class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold">Balnéothérapie</span>
-                <span class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold">Réentrainement à
-                    l’effort</span>
-                <span class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold">Suivi post-opératoire</span>
+                <button v-for="service in services" :key="service" type="button" tabindex="0"
+                    class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:bg-yellow-300 focus-visible:text-black focus-visible:shadow-none"
+                    aria-label="Service proposé : {{ service }}">
+                    {{ service }}
+                </button>
             </div>
         </div>
 
@@ -54,14 +49,9 @@
             </div>
         </div>
 
-        <Button
-          :to="`/form/${route.params.id}`"
-          size="lg"
-          variant="primary"
-          block
-          aria-label="Accéder au formulaire pour ce centre"
-        >
-          Accéder au formulaire
+        <Button :to="`/form/${route.params.id}`" size="lg" variant="primary" block
+            aria-label="Accéder au formulaire pour ce centre">
+            Accéder au formulaire
         </Button>
     </div>
 </template>
@@ -69,4 +59,13 @@
 import { useRoute } from 'vue-router';
 import Button from './components/Button.vue';
 const route = useRoute();
+const services = [
+    "Kinésithérapie",
+    "Rééducation neurologique",
+    "Rééducation orthopédique",
+    "Ergothérapie",
+    "Balnéothérapie",
+    "Réentrainement à l’effort",
+    "Suivi post-opératoire"
+];
 </script>
