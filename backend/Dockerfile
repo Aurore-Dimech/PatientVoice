@@ -44,8 +44,8 @@ RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \
     && chmod -R 755 /var/www/bootstrap/cache
 
-# Create a custom Apache virtual host config for Laravel
-RUN echo '<VirtualHost *:${PORT}>' > /etc/apache2/sites-available/laravel.conf \
+# Create a custom Apache virtual host config template for Laravel
+RUN echo '<VirtualHost *:__PORT__>' > /etc/apache2/sites-available/laravel.conf \
     && echo '    DocumentRoot /var/www/public' >> /etc/apache2/sites-available/laravel.conf \
     && echo '    <Directory /var/www/public>' >> /etc/apache2/sites-available/laravel.conf \
     && echo '        AllowOverride All' >> /etc/apache2/sites-available/laravel.conf \
@@ -60,16 +60,19 @@ RUN echo '<VirtualHost *:${PORT}>' > /etc/apache2/sites-available/laravel.conf \
 RUN a2dissite 000-default.conf \
     && a2ensite laravel.conf
 
-# Configure Apache to listen on the PORT environment variable (default 10000 on Render)
-RUN echo "Listen \${PORT}" > /etc/apache2/ports.conf
-
-# Debug: Verify the config and directory
-RUN cat /etc/apache2/sites-available/laravel.conf \
-    && ls -la /var/www/public/ \
-    && echo "PORT is set to: \${PORT}"
+# Create a startup script to set PORT dynamically
+RUN echo '#!/bin/bash' > /usr/local/bin/start-apache.sh \
+    && echo 'PORT=${PORT:-10000}' >> /usr/local/bin/start-apache.sh \
+    && echo 'echo "Setting PORT to $PORT"' >> /usr/local/bin/start-apache.sh \
+    && echo 'sed -i "s/__PORT__/$PORT/g" /etc/apache2/sites-available/laravel.conf' >> /usr/local/bin/start-apache.sh \
+    && echo 'echo "Listen $PORT" > /etc/apache2/ports.conf' >> /usr/local/bin/start-apache.sh \
+    && echo 'cat /etc/apache2/sites-available/laravel.conf' >> /usr/local/bin/start-apache.sh \
+    && echo 'ls -la /var/www/public/' >> /usr/local/bin/start-apache.sh \
+    && echo 'apache2-foreground' >> /usr/local/bin/start-apache.sh \
+    && chmod +x /usr/local/bin/start-apache.sh
 
 # Expose the port (Render will use PORT env var)
 EXPOSE ${PORT:-10000}
 
-# Start Apache in the foreground
-CMD ["apache2-foreground"]
+# Start the custom script
+CMD ["/usr/local/bin/start-apache.sh"]
