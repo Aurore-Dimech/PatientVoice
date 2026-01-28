@@ -4,15 +4,12 @@ on:
   push:
     branches:
       - dev
-    tags:
-      - "v*.*.*"
   pull_request:
     branches:
       - dev
 
 env:
   SERVER_PATH: backend
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/patientvoice-backend
 
 jobs:
   install:
@@ -51,75 +48,41 @@ jobs:
         run: npm ci
         working-directory: frontend
 
-  # build-docker:
-  #   name: Build Docker Image
-  #   runs-on: ubuntu-latest
-  #   if: github.event_name == 'pull_request' || startsWith(github.ref, 'refs/tags/')
-  #   outputs:
-  #     image_tag: ${{ steps.set-tag.outputs.image_tag }}
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+  deploy-backend:
+    name: Deploy Backend to Render
+    runs-on: ubuntu-latest
+    needs: install
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/dev')
+    steps:
+      - name: Extract version or branch
+        id: version
+        run: |
+          VERSION="dev-${GITHUB_SHA::7}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
-  #     - name: Set image tag
-  #       id: set-tag
-  #       run: |
-  #         if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-  #           TAG=${GITHUB_REF#refs/tags/}
-  #           echo "IS_TAG=true" >> $GITHUB_ENV
-  #         else
-  #           TAG="pr-${{ github.event.pull_request.number }}"
-  #           echo "IS_TAG=false" >> $GITHUB_ENV
-  #         fi
-  #         echo "image_tag=${TAG}" >> $GITHUB_OUTPUT
-  #         echo "IMAGE_TAG=${TAG}" >> $GITHUB_ENV
-        
-  #     - name: Set up QEMU
-  #       uses: docker/setup-qemu-action@v2
+      - name: Deploy to Render
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache": false}'
 
-  #     - name: Set up Docker Buildx
-  #       uses: docker/setup-buildx-action@v3
+      - name: Wait for deployment
+        run: sleep 30
 
-  #     - name: Login to DockerHub
-  #       if: env.IS_TAG == 'true'
-  #       uses: docker/login-action@v3
-  #       with:
-  #         username: ${{ secrets.DOCKER_USERNAME }}
-  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-  #     - name: Build and push Docker image
-  #       uses: docker/build-push-action@v5
-  #       with:
-  #         context: ${{ env.SERVER_PATH }}
-  #         file: ${{ env.SERVER_PATH }}/Dockerfile
-  #         push: ${{ startsWith(github.ref, 'refs/tags/') }}
-  #         tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-  #         cache-from: type=gha
-  #         cache-to: type=gha,mode=max
-  #         load: true
-
-  #     - name: Save image as artifact (PR only)
-  #       if: env.IS_TAG == 'false'
-  #       run: |
-  #         # docker pull ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} || docker build -t ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} ${{ env.SERVER_PATH }}
-  #         docker save ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} -o docker-image.tar
-
-  #     - name: Upload image artifact (PR only)
-  #       if: env.IS_TAG == 'false'
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: docker-image-${{ env.IMAGE_TAG }}
-  #         path: docker-image.tar
-  #         retention-days: 7
+      - name: Verify deployment
+        run: |
+          echo "Backend deployment triggered for version ${{ env.VERSION }}"
 
   deploy-frontend:
     name: Deploy Frontend to Render
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     steps:
-      - name: Extract version from tag
+      - name: Extract branch and commit
         id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: |
+          VERSION="dev-${GITHUB_SHA::7}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
       - name: Deploy to Render
         run: |
@@ -134,70 +97,56 @@ jobs:
         run: |
           echo "Frontend deployment triggered for version ${{ env.VERSION }}"
 
-  # deploy-backend:
-  #   name: Deploy Backend to Render
-  #   runs-on: ubuntu-latest
-  #   needs: build-docker
-  #   if: startsWith(github.ref, 'refs/tags/')
-  #   steps:
-  #     - name: Extract version from tag
-  #       id: version
-  #       run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+  smoke-test:
+    name: Smoke Test Deployment
+    runs-on: ubuntu-latest
+    needs: deploy-backend
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/dev')
+    steps:
+      - name: Wait for deployment to stabilize
+        run: sleep 10
 
-  #     - name: Deploy to Render
-  #       run: |
-  #         curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}" \
-  #           -H "Content-Type: application/json" \
-  #           -d '{
-  #             "clearCache": false,
-  #             "imageUrl": "${{ env.IMAGE_NAME }}:${{ env.VERSION }}"
-  #           }'
+      - name: Health check
+        run: |
+          echo "Testing backend health endpoint..."
+          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/health || echo "000")
+          if [ "$response" != "200" ]; then
+            echo "::error::Health check failed with status code: $response"
+            exit 1
+          fi
+          echo "Health check passed ✓"
 
-  #     - name: Wait for deployment
-  #       run: sleep 30
+      - name: Test GET /centers endpoint
+        run: |
+          echo "Testing GET /centers endpoint..."
+          response=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/centers)
+          status_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
 
-  #     - name: Verify deployment
-  #       run: |
-  #         echo "Deployment triggered for version ${{ env.VERSION }}"
-  #         echo "Image: ${{ env.IMAGE_NAME }}:${{ env.VERSION }}"
+          if [ "$status_code" != "200" ]; then
+            echo "::error::GET /centers failed with status code: $status_code"
+            exit 1
+          fi
 
-  # smoke-test:
-  #   name: Smoke Test Deployment
-  #   runs-on: ubuntu-latest
-  #   needs: deploy-backend
-  #   if: startsWith(github.ref, 'refs/tags/')
-  #   steps:
-  #     - name: Wait for deployment to stabilize
-  #       run: sleep 10
+          echo "Response: $body"
+          echo "GET /centers test passed ✓"
 
-  #     - name: Health check
-  #       run: |
-  #         echo "Testing backend health endpoint..."
-  #         response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/health || echo "000")
-  #         if [ "$response" != "200" ]; then
-  #           echo "::error::Health check failed with status code: $response"
-  #           exit 1
-  #         fi
-  #         echo "Health check passed ✓"
+      - name: Test GET /forms endpoint
+        run: |
+          echo "Testing GET /forms endpoint..."
+          response=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/forms)
+          status_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
 
-  #     - name: Test GET /api/health endpoint
-  #       run: |
-  #         echo "Testing GET /api/health endpoint..."
-  #         response=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/api/health)
-  #         status_code=$(echo "$response" | tail -n1)
-  #         body=$(echo "$response" | head -n-1)
+          if [ "$status_code" != "200" ]; then
+            echo "::error::GET /forms failed with status code: $status_code"
+            exit 1
+          fi
 
-  #         if [ "$status_code" != "200" ]; then
-  #           echo "::error::GET /todos failed with status code: $status_code"
-  #           exit 1
-  #         fi
+          echo "Response: $body"
+          echo "GET /forms test passed ✓"
 
-  #         echo "Response: $body"
-  #         echo "GET /api/health test passed ✓"
-
-  #     - name: Deployment validation complete
-  #       run: |
-  #         echo "All smoke tests passed successfully"
-  #         echo "Backend is healthy and responding correctly"
-
-
+      - name: Deployment validation complete
+        run: |
+          echo "All smoke tests passed successfully"
+          echo "Backend is healthy and responding correctly"
