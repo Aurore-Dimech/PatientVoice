@@ -56,18 +56,26 @@ RUN echo '<VirtualHost *:__PORT__>' > /etc/apache2/sites-available/laravel.conf 
     && echo '    CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-available/laravel.conf \
     && echo '</VirtualHost>' >> /etc/apache2/sites-available/laravel.conf
 
-# Disable the default site and enable the custom Laravel site
+# Disable and remove the default site, enable the custom Laravel site, and validate config
 RUN a2dissite 000-default.conf \
-    && a2ensite laravel.conf
+    && rm -f /etc/apache2/sites-enabled/000-default.conf \
+    && a2ensite laravel.conf \
+    && apache2ctl configtest
 
-# Create a startup script to set PORT dynamically
+# Create a startup script to set PORT dynamically and debug
 RUN echo '#!/bin/bash' > /usr/local/bin/start-apache.sh \
+    && echo 'echo "Starting Apache setup script..."' >> /usr/local/bin/start-apache.sh \
     && echo 'PORT=${PORT:-10000}' >> /usr/local/bin/start-apache.sh \
     && echo 'echo "Setting PORT to $PORT"' >> /usr/local/bin/start-apache.sh \
     && echo 'sed -i "s/__PORT__/$PORT/g" /etc/apache2/sites-available/laravel.conf' >> /usr/local/bin/start-apache.sh \
     && echo 'echo "Listen $PORT" > /etc/apache2/ports.conf' >> /usr/local/bin/start-apache.sh \
+    && echo 'echo "Final Apache config:"' >> /usr/local/bin/start-apache.sh \
     && echo 'cat /etc/apache2/sites-available/laravel.conf' >> /usr/local/bin/start-apache.sh \
+    && echo 'echo "Contents of /var/www/public/:"' >> /usr/local/bin/start-apache.sh \
     && echo 'ls -la /var/www/public/' >> /usr/local/bin/start-apache.sh \
+    && echo 'echo "Enabled sites:"' >> /usr/local/bin/start-apache.sh \
+    && echo 'ls /etc/apache2/sites-enabled/' >> /usr/local/bin/start-apache.sh \
+    && echo 'echo "Starting Apache..."' >> /usr/local/bin/start-apache.sh \
     && echo 'apache2-foreground' >> /usr/local/bin/start-apache.sh \
     && chmod +x /usr/local/bin/start-apache.sh
 
