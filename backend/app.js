@@ -18,7 +18,7 @@ app.use('/centers', centerRoutes);
 app.use('/forms', formRoutes);
 
 // Database sync and start server
-sequelize.sync().then(() => {
+sequelize.sync({ force: false }).then(() => {
   console.log('Database synced');
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
