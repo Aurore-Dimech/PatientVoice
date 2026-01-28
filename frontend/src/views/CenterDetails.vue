@@ -2,7 +2,8 @@
     <div class="bg-gray-50 min-h-screen p-8">
 
         <RouterLink to="/centers"
-            class="mb-6 flex items-center px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-100">
+            class="mb-6 flex items-center px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-100
+                   focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:bg-yellow-300 focus-visible:text-black focus-visible:shadow-none focus-visible:border-none">
             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -53,14 +54,19 @@
             </div>
         </div>
 
-        <RouterLink :to="`/form/${route.params.id}`"
-            class="w-full bg-cyan-700 text-white font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 transition-colors">
-            Accéder au formulaire
-        </RouterLink>
-
+        <Button
+          :to="`/form/${route.params.id}`"
+          size="lg"
+          variant="primary"
+          block
+          aria-label="Accéder au formulaire pour ce centre"
+        >
+          Accéder au formulaire
+        </Button>
     </div>
 </template>
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+import Button from './components/Button.vue';
 const route = useRoute();
 </script>

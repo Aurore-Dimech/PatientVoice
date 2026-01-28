@@ -16,10 +16,14 @@
                     :address="center.address" :cityZip="center.cityZip" :image="center.image" />
             </div>
             <div class="flex justify-center mt-8">
-                <RouterLink to="/centers"
-                    class="bg-white border-cyan-700 border-2 text-cyan-700 font-bold px-8 py-4 rounded-xl text-lg hover:bg-cyan-800 hover:text-white transition-colors">
-                    Parcourir les centres
-                </RouterLink>
+                 <Button
+                  to="/centers"
+                  size="lg"
+                  variant="outline"
+                  aria-label="Parcourir tous les centres"
+                >
+                  Parcourir les centres
+                </Button>
             </div>
         </section>
 
@@ -63,6 +67,7 @@
 
 <script setup lang="ts">
 // @ts-expect-error import
+import Button from './components/Button.vue'
 import CenterCard from './components/CenterCard.vue'
 import { RouterLink } from 'vue-router'
 import mockData from '../assets/mockData'
