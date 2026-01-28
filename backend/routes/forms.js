@@ -53,13 +53,13 @@ router.get('/', async (req, res) => {
     const themes = await Theme.findAll({
       include: [{
         model: Question.scope('isActive'),
-        as: 'questions',
+        as: 'Questions',
       }],
     });
 
     const data = themes.map(theme => ({
       name: theme.name,
-      questions: theme.questions.map(question => ({
+      questions: theme.Questions.map(question => ({
         id: question.id.toString(),
         name: question.content,
       })),
