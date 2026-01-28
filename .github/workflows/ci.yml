@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - feat/cicd
+      - dev
     tags:
       - "v*.*.*"
   pull_request:

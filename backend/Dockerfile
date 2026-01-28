@@ -1,5 +1,6 @@
 FROM php:8.2-apache
 
+
 WORKDIR /var/www
 
 RUN a2enmod rewrite \
@@ -24,8 +25,19 @@ RUN docker-php-ext-install gettext mbstring exif intl bcmath pdo_mysql gd
 RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 
+COPY composer.json composer.lock ./
+
+RUN composer install --no-dev --optimize-autoloader
+
+COPY . .
+
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 755 /var/www/storage \
+    && chmod -R 755 /var/www/bootstrap/cache
+
 RUN echo "Listen \${PORT}" > /etc/apache2/ports.conf \
-    && sed -i 's/VirtualHost \*:80/VirtualHost *:\${PORT}/g' /etc/apache2/sites-available/000-default.conf
+    && sed -i 's/VirtualHost \*:80/VirtualHost *:\${PORT}/g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/public|g' /etc/apache2/sites-available/000-default.conf
 
 EXPOSE ${PORT:-10000}
 
