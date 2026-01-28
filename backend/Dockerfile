@@ -1,6 +1,5 @@
 FROM php:8.2-apache
 
-
 WORKDIR /var/www
 
 RUN a2enmod rewrite \
@@ -35,9 +34,17 @@ RUN chown -R www-data:www-data /var/www \
     && chmod -R 755 /var/www/storage \
     && chmod -R 755 /var/www/bootstrap/cache
 
-RUN echo "Listen \${PORT}" > /etc/apache2/ports.conf \
-    && sed -i 's/VirtualHost \*:80/VirtualHost *:\${PORT}/g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/public|g' /etc/apache2/sites-available/000-default.conf
+RUN echo '<VirtualHost *:${PORT}>' > /etc/apache2/sites-available/000-default.conf \
+    && echo '    DocumentRoot /var/www/public' >> /etc/apache2/sites-available/000-default.conf \
+    && echo '    <Directory /var/www/public>' >> /etc/apache2/sites-available/000-default.conf \
+    && echo '        AllowOverride All' >> /etc/apache2/sites-available/000-default.conf \
+    && echo '        Require all granted' >> /etc/apache2/sites-available/000-default.conf \
+    && echo '    </Directory>' >> /etc/apache2/sites-available/000-default.conf \
+    && echo '    ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-available/000-default.conf \
+    && echo '    CustomLog ${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-available/000-default.conf \
+    && echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default.conf
+
+RUN echo "Listen \${PORT}" > /etc/apache2/ports.conf
 
 EXPOSE ${PORT:-10000}
 
