@@ -64,7 +64,7 @@ RUN a2dissite 000-default.conf \
 
 # Create a startup script to set PORT dynamically and debug
 RUN echo '#!/bin/bash' > /usr/local/bin/start-apache.sh \
-    && echo 'echo "Starting Apache setup script..."' >> /usr/local/bin/start-apache.sh \
+    && echo 'echo "Script started successfully!"' >> /usr/local/bin/start-apache.sh \
     && echo 'PORT=${PORT:-10000}' >> /usr/local/bin/start-apache.sh \
     && echo 'echo "Setting PORT to $PORT"' >> /usr/local/bin/start-apache.sh \
     && echo 'sed -i "s/__PORT__/$PORT/g" /etc/apache2/sites-available/laravel.conf' >> /usr/local/bin/start-apache.sh \
@@ -82,5 +82,5 @@ RUN echo '#!/bin/bash' > /usr/local/bin/start-apache.sh \
 # Expose the port (Render will use PORT env var)
 EXPOSE ${PORT:-10000}
 
-# Start the custom script
-CMD ["/usr/local/bin/start-apache.sh"]
+# Set the entrypoint to the startup script
+ENTRYPOINT ["/usr/local/bin/start-apache.sh"]
