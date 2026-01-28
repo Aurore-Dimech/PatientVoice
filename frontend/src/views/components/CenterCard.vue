@@ -13,6 +13,7 @@
       size="md"
       variant="primary"
       block
+      class="mt-auto"
       aria-label="Voir le détail du centre {{ name }}"
     >
       Détailler
