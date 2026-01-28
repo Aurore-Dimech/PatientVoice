@@ -12,7 +12,7 @@ on:
 
 env:
   SERVER_PATH: backend
-  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/patientvoice
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/patientvoice-backend
 
 jobs:
   install:
