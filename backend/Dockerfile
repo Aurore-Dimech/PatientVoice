@@ -82,5 +82,5 @@ RUN echo '#!/bin/bash' > /usr/local/bin/start-apache.sh \
 # Expose the port (Render will use PORT env var)
 EXPOSE ${PORT:-10000}
 
-# Set the entrypoint to the startup script
-ENTRYPOINT ["/usr/local/bin/start-apache.sh"]
+# Override the base CMD with the startup script
+CMD ["/usr/local/bin/start-apache.sh"]
