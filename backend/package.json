@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "migrate": "sequelize-cli db:migrate"
+    "migrate": "sequelize-cli --config config/config.js db:migrate"
   },
   "dependencies": {
     "express": "^5.2.1",
