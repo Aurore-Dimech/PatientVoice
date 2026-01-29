@@ -1,12 +1,14 @@
 <template>
     <div class="bg-gray-50 min-h-screen p-8">
-        <h1 class="text-2xl font-bold mb-4">Formulaire de Questions</h1>
+        <h2 class="text-2xl font-bold mb-4 focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none rounded px-2 py-1" tabindex="0">Questionnaire : {{ centre.name }}</h2>
         <form @submit.prevent="submit">
             <fieldset v-for="theme in themes" :key="theme.name" class="bg-white border-2 border-cyan-700/100 rounded-xl p-8 mb-6">
-                <legend class="px-6 text-xl font-semibold">Thème {{ theme.name }}</legend>
+                <legend class="px-6 text-xl font-semibold focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none rounded" tabindex="0">
+                    <h3 class="inline">Thème {{ theme.name }}</h3>
+                </legend>
                 <div v-for="question in theme.questions" :key="question.id" class="mb-6 px-4">
                     <p 
-                        class="block mb-3 text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded px-2 py-1" 
+                        class="block mb-3 text-lg font-medium focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none rounded px-2 py-1" 
                         :id="'question-label-' + question.id"
                         tabindex="0"
                     >
@@ -28,7 +30,7 @@
                                 :checked="answers[question.id]?.value === value"
                                 @change="handleRadioChange(question.id, value)"
                                 :aria-label="`Option ${value}`"
-                                class="w-5 h-5 cursor-pointer focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                                class="w-5 h-5 cursor-pointer focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none"
                             />
                             <span class="text-base">{{ value }}</span>
                         </label>
@@ -43,7 +45,7 @@
                             @input="handleCommentChange(question.id, ($event.target as HTMLTextAreaElement).value)"
                             placeholder="Ajoutez des détails si vous le souhaitez..."
                             rows="2"
-                            class="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+                            class="border border-gray-300 p-2 w-full rounded focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none text-sm"
                         ></textarea>
                     </div>
                 </div>
@@ -51,7 +53,7 @@
             <button 
                 type="submit" 
                 :disabled="isSubmitting"
-                class="w-full bg-cyan-700 text-white cursor-pointer font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-cyan-700 text-white cursor-pointer font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:bg-yellow-300 focus-visible:text-black focus-visible:shadow-none focus-visible:border-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer' }}
             </button>
@@ -68,6 +70,14 @@ const route = useRoute();
 const router = useRouter();
 const centerId = Number(route.params.id);
 
+const getCenterFromId = (id: number): {name: string} => {
+    const centers: Record<number, {name: string}> = {
+        1: {name: 'Centre de Santé A'},
+        2: {name: 'Centre Médical B'},
+        3: {name: 'Clinique C'}
+    };
+    return centers[id] || {name: 'Centre Inconnu'};
+};
 
 type Answer = {
     value: number;
@@ -75,6 +85,7 @@ type Answer = {
 };
 const answers = ref<Record<number, Answer>>({});
 const isSubmitting = ref(false);
+const centre = getCenterFromId(centerId);
 
 const handleRadioChange = (questionId: number, value: number) => {
     answers.value[questionId] = {
