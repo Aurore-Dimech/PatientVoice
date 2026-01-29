@@ -26,7 +26,7 @@ const Center = sequelize.define('Center', {
 }, {
   tableName: 'centers',
   timestamps: true,
-  paranoid: true,  // Soft deletes
+  paranoid: true,
 });
 
 module.exports = Center;
