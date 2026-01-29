@@ -6,7 +6,7 @@ const Center = require('../models/Center');
 router.get('/', async (req, res) => {
   try {
     const centers = await Center.findAll();
-    res.json(centers);  // Assumes basic JSON; customize if CenterListingResource differs
+    res.json(centers);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -17,7 +17,7 @@ router.get('/:center', async (req, res) => {
   try {
     const center = await Center.findByPk(req.params.center);
     if (!center) return res.status(404).json({ error: 'Center not found' });
-    res.json(center);  // Assumes basic JSON; customize if CenterResource differs
+    res.json(center);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

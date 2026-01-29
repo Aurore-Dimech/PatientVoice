@@ -24,17 +24,15 @@
 import { ref } from 'vue';
 // @ts-expect-error import
 import CenterCard from './components/CenterCard.vue'
-import mockData from '../assets/mockData'
 import type { Center } from '@/assets/typings';
 
 
 const centers = ref<Array<Center>>([])
 
 const getCenters = async () => {
-  // const response = await fetch('http://localhost:3000/centers')
-  const data = mockData
-  centers.value = data.Centres
-  // const data = await response.json()
+  const response = await fetch('https://patientvoice-backend.onrender.com/centers')
+  const data = await response.json()
+  centers.value = data
   console.log(data)
 }
 getCenters()

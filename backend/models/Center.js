@@ -23,10 +23,22 @@ const Center = sequelize.define('Center', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  city: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  postal_code: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  address: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
 }, {
   tableName: 'centers',
   timestamps: true,
-  paranoid: true,  // Soft deletes
+  paranoid: true,
 });
 
 module.exports = Center;

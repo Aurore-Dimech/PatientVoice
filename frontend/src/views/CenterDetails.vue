@@ -11,7 +11,7 @@
         </RouterLink>
 
         <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Nom</h1>
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ center.name }}</h1>
             <div class="flex items-center text-gray-600 mb-2">
                 <svg class="w-5 h-5 mr-2 text-cyan-700" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24">
@@ -19,9 +19,11 @@
                         d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
                     <circle cx="12" cy="9" r="2.5" />
                 </svg>
-                Ville, CP
+                <!-- {{ center.cityZip }} -->
+                  TODO Ville & CityZip
             </div>
-            <p class="text-gray-600 mb-4">Adresse</p>
+            <!-- <p class="text-gray-600 mb-4">{{ center.address }}</p> -->
+            <p class="text-gray-600 mb-4">TODO Adresse</p>
         </div>
 
         <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8">
@@ -54,7 +56,7 @@
             </div>
         </div>
 
-        <Button :to="`/form/${route.params.id}`" size="lg" variant="primary" block
+        <Button :to="`/form/${centerId}`" size="lg" variant="primary" block
             aria-label="Accéder au formulaire pour ce centre">
             Accéder au formulaire
         </Button>
@@ -64,8 +66,18 @@
 import { ref, onMounted } from 'vue'
 import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import { useRoute } from 'vue-router';
+// @ts-expect-error import
 import Button from './components/Button.vue';
 const route = useRoute();
+const centerId = route.params.id;
+const getCenterFromId = async (uuid: any): Promise<any> => {
+    const response = await fetch(`https://patientvoice-backend.onrender.com/centers/${uuid}`);
+    const data = await response.json()
+    console.log(data)
+    return data;
+};
+const center = await getCenterFromId(centerId);
+console.log(center);
 const services = [
     "Kinésithérapie",
     "Rééducation neurologique",

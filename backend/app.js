@@ -8,17 +8,18 @@ const formRoutes = require('./routes/forms');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'https://patientvoice-frontend.onrender.com',
+    methods: ['GET', 'POST', 'PUT'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
-// Routes
 app.use('/', indexRoutes);
 app.use('/centers', centerRoutes);
 app.use('/forms', formRoutes);
 
-// Database sync and start server
-sequelize.sync({ force: false }).then(() => {
+sequelize.sync().then(() => {
   console.log('Database synced');
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
