@@ -15,14 +15,6 @@ const Center = sequelize.define('Center', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  longitude: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  latitude: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   city: {
     type: DataTypes.STRING,
     allowNull: false,
