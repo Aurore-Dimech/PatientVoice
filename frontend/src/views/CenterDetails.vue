@@ -43,12 +43,15 @@
             <p class="mb-2" id="map-desc">
                 Centre situé au {{ center.address }}, {{ center.cityZip }}.
             </p>
-            <div v-if="mapCenter" style="height: 200px; border-radius: 0.75rem; overflow: hidden;">
-                <l-map :zoom="15" :center="mapCenter" aria-describedby="map-desc" role="region"
-                    aria-label="Carte de localisation du centre" tabindex="0" style="height: 100%; width: 100%;">
-                    <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            <div 
+                v-if="mapCenter" :aria-label="`Carte de localisation du centre situé au ${center.address}, ${center.cityZip}`" 
+                class="focus:outline-yellow-300 focus:outline-4 focus:bg-yellow-300 focus-visible:none" 
+                style="height: 200px; border-radius: 0.75rem; overflow: hidden;" tabindex="0"
+            >
+                <l-map inert :zoom="15" :center="mapCenter" role="region" style="height: 100%; width: 100%;" :options="{ keyboard: false, dragging: false, zoomControl: false }">
+                    <l-tile-layer inert url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         attribution="&copy; OpenStreetMap contributors" />
-                    <l-marker :lat-lng="mapCenter" />
+                    <l-marker inert :lat-lng="mapCenter" />
                 </l-map>
             </div>
             <div v-else>
@@ -76,8 +79,8 @@ const getCenterFromId = async (uuid: any): Promise<any> => {
     console.log(data)
     return data;
 };
-const center = await getCenterFromId(centerId);
-console.log(center);
+// const center = await getCenterFromId(centerId);
+// console.log(center);
 const services = [
     "Kinésithérapie",
     "Rééducation neurologique",
