@@ -63,7 +63,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import mockData from '../assets/mockData'
 import type { Theme } from '@/assets/typings';
 
 const route = useRoute();
@@ -108,53 +107,50 @@ const handleCommentChange = (questionId: number, comment: string) => {
 
 const themes = ref<Array<Theme>>([])
 const getThemes = async () => {
-    // const response = await fetch(`http://localhost:3000/centers/${centerId}/themes`)
-    const data = mockData
-    themes.value = data.Themes
-    // const data = await response.json()
-    console.log(data)
+    const response = await fetch(`https://patientvoice-backend.onrender.com/forms`)
+    const data = await response.json()
+    themes.value = data
 }
 getThemes()
 
 const submit = async () => {
     try {
         isSubmitting.value = true;
-        
         // Format the answers for submission
         const formattedAnswers = Object.entries(answers.value)
             .filter(([_, answer]) => answer.value > 0) // Only include questions with selected values
             .map(([questionId, answer]) => ({
-                questionId: Number(questionId),
+                question_id: Number(questionId),
                 value: answer.value,
-                comment: answer.comment || ''
+                content: answer.comment || ''
             }));
         console.log('Formatted Answers:', formattedAnswers);
 
-        // const response = await fetch(`http://localhost:3000/centers/${centerId}/answers`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         centerId: centerId,
-        //         answers: formattedAnswers
-        //     })
-        // });
+        const response = await fetch(`https://patientvoice-backend.onrender.com/forms`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                center_id: centerId,
+                answers: formattedAnswers
+            })
+        });
+        console.log('Submission Response:', response);
+        if (!response.ok) {
+            throw new Error('Failed to submit form');
+        }
 
-        // if (!response.ok) {
-        //     throw new Error('Failed to submit form');
-        // }
+        const result = await response.json();
+        console.log('Form submitted successfully:', result);
 
-        // const result = await response.json();
-        // console.log('Form submitted successfully:', result);
-        
+        isSubmitting.value = false;
         router.push('/center/' + centerId);
         
     } catch (error) {
         console.error('Error submitting form:', error);
-        alert('Error submitting form. Please try again.');
-    } finally {
         isSubmitting.value = false;
+        alert('Error submitting form. Please try again.');
     }
 }
 </script>
