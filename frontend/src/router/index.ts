@@ -1,10 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-// @ts-expect-error import
 import Centers from "../views/Centers.vue";
-// @ts-expect-error import
 import Accueil from "../views/Accueil.vue";
 import CenterDetails from "../views/CenterDetails.vue";
 import Contact from "../views/Contact.vue";
+import Form from "../views/FormPage.vue";
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
@@ -27,6 +26,11 @@ const router = createRouter({
 			path: "/contact",
 			name: "Contact",
 			component: Contact,
+		},
+		{
+			path: "/form/:id",
+			name: "Form",
+			component: Form,
 		}
 	],
 	scrollBehavior() {

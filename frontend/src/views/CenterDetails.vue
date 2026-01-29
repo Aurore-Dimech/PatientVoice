@@ -53,10 +53,14 @@
             </div>
         </div>
 
-        <button
+        <RouterLink :to="`/form/${route.params.id}`"
             class="w-full bg-cyan-700 text-white font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 transition-colors">
             Accéder au formulaire
-        </button>
+        </RouterLink>
 
     </div>
 </template>
+<script setup lang="ts">
+import { useRoute } from 'vue-router';
+const route = useRoute();
+</script>
