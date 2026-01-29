@@ -33,4 +33,11 @@ const Center = sequelize.define('Center', {
   paranoid: true,
 });
 
+Center.belongsToMany(Specialty, {
+  through: 'center_specialties',
+  foreignKey: 'center_id',
+  otherKey: 'specialty_id',
+  as: 'specialties'
+});
+
 module.exports = Center;

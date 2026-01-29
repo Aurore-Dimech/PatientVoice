@@ -15,7 +15,13 @@ router.get('/', async (req, res) => {
 // GET /centers/:center
 router.get('/:center', async (req, res) => {
   try {
-    const center = await Center.findByPk(req.params.center);
+    const center = await Center.findByPk(req.params.id, {
+      include: [{
+        model: require('../models/Specialty'),
+        as: 'specialties',
+        through: { attributes: [] }
+      }]
+    });
     if (!center) return res.status(404).json({ error: 'Center not found' });
     res.json(center);
   } catch (error) {
