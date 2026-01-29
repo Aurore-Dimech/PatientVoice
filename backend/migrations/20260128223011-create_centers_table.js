@@ -18,12 +18,16 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false
       },
-      longitude: {
+      city: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      latitude: {
+      postal_code: {
         type: Sequelize.STRING,
+        allowNull: false
+      },
+      address: {
+        type: Sequelize.TEXT,
         allowNull: false
       },
       createdAt: {
@@ -31,7 +35,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE
       },
       deletedAt: {

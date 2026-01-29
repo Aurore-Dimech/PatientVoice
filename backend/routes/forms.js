@@ -34,6 +34,7 @@ router.post('/', [
         await Answer.create({
           form_id: form.id,
           question_id: answer.question_id,
+          value: answer.value,
           content: answer.content,
         }, { transaction });
       }
