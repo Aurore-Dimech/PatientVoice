@@ -28,16 +28,20 @@ module.exports = {
         },
         onDelete: 'CASCADE'
       },
+      value: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       content: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE
       }
     });
