@@ -4,14 +4,48 @@
         <form @submit.prevent="submit">
             <fieldset v-for="theme in themes" :key="theme.name" class="bg-white border-2 border-cyan-700/100 rounded-xl p-8 mb-6">
                 <legend class="px-6 text-xl font-semibold">Thème {{ theme.name }}</legend>
-                <div v-for="question in theme.questions" :key="question.id" class="mb-4 px-4">
-                    <label class="block mb-2 text-lg" :for="'question-' + question.id">{{ question.name }}</label>
-                    <textarea 
-                        :id="'question-' + question.id"
-                        v-model="answers[question.id]"
-                        :name="question.name" 
-                        class="border border-cyan-700/100 p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    ></textarea>
+                <div v-for="question in theme.questions" :key="question.id" class="mb-6 px-4">
+                    <p 
+                        class="block mb-3 text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded px-2 py-1" 
+                        :id="'question-label-' + question.id"
+                        tabindex="0"
+                    >
+                        {{ question.name }}
+                    </p>
+                    <div 
+                        role="radiogroup" 
+                        class="flex flex-row flex-wrap gap-4 mb-3"
+                    >
+                        <label 
+                            v-for="value in [1, 2, 3, 4, 5]" 
+                            :key="value"
+                            class="flex items-center space-x-2 p-2 rounded hover:bg-gray-100 cursor-pointer transition-colors"
+                        >
+                            <input
+                                type="radio"
+                                :name="'question-' + question.id"
+                                :value="value"
+                                :checked="answers[question.id]?.value === value"
+                                @change="handleRadioChange(question.id, value)"
+                                :aria-label="`Option ${value}`"
+                                class="w-5 h-5 cursor-pointer focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                            />
+                            <span class="text-base">{{ value }}</span>
+                        </label>
+                    </div>
+                    <div class="mt-3">
+                        <label :for="'comment-' + question.id" class="block mb-2 text-sm text-gray-600">
+                            Commentaire optionnel :
+                        </label>
+                        <textarea
+                            :id="'comment-' + question.id"
+                            :value="answers[question.id]?.comment || ''"
+                            @input="handleCommentChange(question.id, ($event.target as HTMLTextAreaElement).value)"
+                            placeholder="Ajoutez des détails si vous le souhaitez..."
+                            rows="2"
+                            class="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+                        ></textarea>
+                    </div>
                 </div>
             </fieldset>
             <button 
@@ -19,7 +53,7 @@
                 :disabled="isSubmitting"
                 class="w-full bg-cyan-700 text-white cursor-pointer font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+                {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer' }}
             </button>
         </form>
     </div>
@@ -35,9 +69,31 @@ const router = useRouter();
 const centerId = Number(route.params.id);
 
 
-// Store answers with question ID as key
-const answers = ref<Record<number, string>>({});
+type Answer = {
+    value: number;
+    comment?: string;
+};
+const answers = ref<Record<number, Answer>>({});
 const isSubmitting = ref(false);
+
+const handleRadioChange = (questionId: number, value: number) => {
+    answers.value[questionId] = {
+        value: value,
+        comment: answers.value[questionId]?.comment || ''
+    };
+};
+
+const handleCommentChange = (questionId: number, comment: string) => {
+    if (answers.value[questionId]) {
+        answers.value[questionId].comment = comment;
+    } else {
+        // Initialize with empty value if comment is added without selecting a checkbox
+        answers.value[questionId] = {
+            value: 0,
+            comment: comment
+        };
+    }
+};
 
 const themes = ref<Array<Theme>>([])
 const getThemes = async () => {
@@ -54,10 +110,13 @@ const submit = async () => {
         isSubmitting.value = true;
         
         // Format the answers for submission
-        const formattedAnswers = Object.entries(answers.value).map(([questionId, answer]) => ({
-            questionId: Number(questionId),
-            content: answer
-        }));
+        const formattedAnswers = Object.entries(answers.value)
+            .filter(([_, answer]) => answer.value > 0) // Only include questions with selected values
+            .map(([questionId, answer]) => ({
+                questionId: Number(questionId),
+                value: answer.value,
+                comment: answer.comment || ''
+            }));
         console.log('Formatted Answers:', formattedAnswers);
 
         // const response = await fetch(`http://localhost:3000/centers/${centerId}/answers`, {
