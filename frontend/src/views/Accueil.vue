@@ -79,8 +79,8 @@
 <script setup lang="ts">
 // @ts-expect-error import
 import Button from './components/Button.vue'
+// @ts-expect-error import
 import CenterCard from './components/CenterCard.vue'
-import { RouterLink } from 'vue-router'
 import mockData from '../assets/mockData'
 import { ref } from 'vue';
 import type { Center } from '@/assets/typings';

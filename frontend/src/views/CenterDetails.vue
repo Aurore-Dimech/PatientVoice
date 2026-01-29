@@ -57,6 +57,7 @@
 </template>
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
+// @ts-expect-error import
 import Button from './components/Button.vue';
 const route = useRoute();
 const services = [
