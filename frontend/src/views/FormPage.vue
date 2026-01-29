@@ -5,10 +5,15 @@
             <fieldset v-for="theme in themes" :key="theme.name" class="bg-white border-2 border-cyan-700/100 rounded-xl p-8 mb-6">
                 <legend class="px-6 text-xl font-semibold">Thème {{ theme.name }}</legend>
                 <div v-for="question in theme.questions" :key="question.id" class="mb-6 px-4">
-                    <p class="block mb-3 text-lg font-medium" :id="'question-label-' + question.id">{{ question.name }}</p>
+                    <p 
+                        class="block mb-3 text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded px-2 py-1" 
+                        :id="'question-label-' + question.id"
+                        tabindex="0"
+                    >
+                        {{ question.name }}
+                    </p>
                     <div 
                         role="radiogroup" 
-                        :aria-labelledby="'question-label-' + question.id"
                         class="flex flex-row flex-wrap gap-4 mb-3"
                     >
                         <label 
@@ -22,7 +27,7 @@
                                 :value="value"
                                 :checked="answers[question.id]?.value === value"
                                 @change="handleRadioChange(question.id, value)"
-                                :aria-label="`Option ${value} pour ${question.name}`"
+                                :aria-label="`Option ${value}`"
                                 class="w-5 h-5 cursor-pointer focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
                             />
                             <span class="text-base">{{ value }}</span>
@@ -48,7 +53,7 @@
                 :disabled="isSubmitting"
                 class="w-full bg-cyan-700 text-white cursor-pointer font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+                {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer' }}
             </button>
         </form>
     </div>
