@@ -17,13 +17,13 @@ import Footer from './views/Footer.vue';
       focus:fixed
       focus:top-0
       focus:left-0
-      focus:bg-cyan-700
-      focus:text-white
+      focus:bg-yellow-300
+      focus:text-black
       focus:p-2
       focus:z-50
       focus:text-center
       focus:text-base
-      focus:font-semibold
+      focus:font-bold
       focus:outline-none
     "
   >

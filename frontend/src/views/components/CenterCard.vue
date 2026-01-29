@@ -5,19 +5,24 @@
       :alt="`Photo du ${name}`"
       class="w-full h-36 object-cover rounded-md mb-4"
     />
-    <h3 class="text-xl font-bold text-gray-800 mb-1">{{ name }}</h3>
+    <p class="text-xl font-bold text-gray-800 mb-1">{{ name }}</p>
     <p class="text-gray-600 mb-1">{{ address }}</p>
     <p class="text-gray-600 mb-4">{{ cityZip }}</p>
-    <RouterLink
+    <Button
       :to="`/center/${id}`"
-      class="w-full bg-cyan-700 text-white font-semibold py-2 rounded-lg mt-auto border-2 hover:bg-white hover:text-cyan-700 text-center"
+      size="md"
+      variant="primary"
+      block
+      class="mt-auto"
+      aria-label="Voir le détail du centre {{ name }}"
     >
       Détailler
-    </RouterLink>
+    </Button>
   </div>
 </template>
 
 <script setup>
+import Button from './Button.vue'
 defineProps({
   id: [String, Number],
   name: String,
