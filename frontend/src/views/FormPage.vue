@@ -120,8 +120,8 @@ const submit = async () => {
         const formattedAnswers = Object.entries(answers.value)
             .filter(([_, answer]) => answer.value > 0) // Only include questions with selected values
             .map(([questionId, answer]) => ({
-                question_id: Number(questionId),
-                value: answer.value,
+                question_id: questionId,
+                value: String(answer.value),
                 content: answer.comment || ''
             }));
         console.log('Formatted Answers:', formattedAnswers);
