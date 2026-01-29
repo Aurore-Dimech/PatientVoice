@@ -6,7 +6,7 @@
                 <legend class="px-6 text-xl font-semibold">Thème {{ theme.name }}</legend>
                 <div v-for="question in theme.questions" :key="question.id" class="mb-6 px-4">
                     <p 
-                        class="block mb-3 text-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 rounded px-2 py-1" 
+                        class="block mb-3 text-lg font-medium focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none rounded px-2 py-1" 
                         :id="'question-label-' + question.id"
                         tabindex="0"
                     >
@@ -28,7 +28,7 @@
                                 :checked="answers[question.id]?.value === value"
                                 @change="handleRadioChange(question.id, value)"
                                 :aria-label="`Option ${value}`"
-                                class="w-5 h-5 cursor-pointer focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                                class="w-5 h-5 cursor-pointer focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none"
                             />
                             <span class="text-base">{{ value }}</span>
                         </label>
@@ -43,7 +43,7 @@
                             @input="handleCommentChange(question.id, ($event.target as HTMLTextAreaElement).value)"
                             placeholder="Ajoutez des détails si vous le souhaitez..."
                             rows="2"
-                            class="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+                            class="border border-gray-300 p-2 w-full rounded focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none text-sm"
                         ></textarea>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
             <button 
                 type="submit" 
                 :disabled="isSubmitting"
-                class="w-full bg-cyan-700 text-white cursor-pointer font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="w-full bg-cyan-700 text-white cursor-pointer font-bold py-4 rounded-xl text-lg flex items-center justify-center hover:bg-cyan-800 focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:bg-yellow-300 focus-visible:text-black focus-visible:shadow-none focus-visible:border-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {{ isSubmitting ? 'Envoi en cours...' : 'Envoyer' }}
             </button>
