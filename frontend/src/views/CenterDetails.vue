@@ -39,15 +39,23 @@
 
 
         <div class="bg-white border border-gray-200 rounded-xl p-8 mb-8">
-            <h2 class="text-2xl font-bold text-gray-900 mb-4">Localisation</h2>
-            <div class="bg-cyan-50 border border-cyan-100 rounded-lg flex flex-col items-center justify-center h-48">
-                <svg class="w-12 h-12 text-cyan-700 mb-2" fill="none" stroke="currentColor" stroke-width="2"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                    <circle cx="12" cy="9" r="2.5" />
-                </svg>
-                <span class="text-gray-600">(la map)</span>
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Carte de localisation</h2>
+            <p class="mb-2" id="map-desc">
+                Centre situé au {{ center.address }}, {{ center.cityZip }}.
+            </p>
+            <div 
+                v-if="mapCenter" :aria-label="`Carte de localisation du centre situé au ${center.address}, ${center.cityZip}`" 
+                class="focus:outline-yellow-300 focus:outline-4 focus:bg-yellow-300 focus-visible:none" 
+                style="height: 200px; border-radius: 0.75rem; overflow: hidden;" tabindex="0"
+            >
+                <l-map inert :zoom="15" :center="mapCenter" role="region" style="height: 100%; width: 100%;" :options="{ keyboard: false, dragging: false, zoomControl: false }">
+                    <l-tile-layer inert url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        attribution="&copy; OpenStreetMap contributors" />
+                    <l-marker inert :lat-lng="mapCenter" />
+                </l-map>
+            </div>
+            <div v-else>
+                <p>Chargement de la carte…</p>
             </div>
         </div>
 
@@ -58,6 +66,8 @@
     </div>
 </template>
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { LMap, LTileLayer, LMarker } from "@vue-leaflet/vue-leaflet";
 import { useRoute } from 'vue-router';
 // @ts-expect-error import
 import Button from './components/Button.vue';
@@ -69,8 +79,8 @@ const getCenterFromId = async (uuid: any): Promise<any> => {
     console.log(data)
     return data;
 };
-const center = await getCenterFromId(centerId);
-console.log(center);
+// const center = await getCenterFromId(centerId);
+// console.log(center);
 const services = [
     "Kinésithérapie",
     "Rééducation neurologique",
@@ -80,4 +90,25 @@ const services = [
     "Réentrainement à l’effort",
     "Suivi post-opératoire"
 ];
+
+const center = ref({
+    name: "Nom",
+    address: "15 rue du louvre",
+    cityZip: "75001 Paris"
+})
+
+const mapCenter = ref<[number, number] | null>(null)
+
+onMounted(async () => {
+    const address = `${center.value.address}, ${center.value.cityZip}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data.length > 0) {
+        mapCenter.value = [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    } else {
+        // une valeur par défaut si l'adresse est pas trouvée
+        mapCenter.value = [48.8566, 2.3522];
+    }
+});
 </script>
