@@ -15,14 +15,6 @@ const Center = sequelize.define('Center', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  longitude: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  latitude: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   city: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -39,6 +31,13 @@ const Center = sequelize.define('Center', {
   tableName: 'centers',
   timestamps: true,
   paranoid: true,
+});
+
+Center.belongsToMany(Specialty, {
+  through: 'center_specialties',
+  foreignKey: 'center_id',
+  otherKey: 'specialty_id',
+  as: 'specialties'
 });
 
 module.exports = Center;
