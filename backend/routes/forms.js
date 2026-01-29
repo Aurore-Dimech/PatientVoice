@@ -20,11 +20,9 @@ router.post('/', [
   const { center_id, answers } = req.body;
 
   try {
-    // Check if center exists
     const center = await require('../models/Center').findByPk(center_id);
     if (!center) return res.status(400).json({ error: 'Invalid center_id' });
 
-    // Validate questions exist and are active
     for (const answer of answers) {
       const question = await Question.scope('isActive').findByPk(answer.question_id);
       if (!question) return res.status(400).json({ error: `Invalid or inactive question_id: ${answer.question_id}` });
