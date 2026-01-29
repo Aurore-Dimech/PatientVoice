@@ -120,29 +120,29 @@ const submit = async () => {
         const formattedAnswers = Object.entries(answers.value)
             .filter(([_, answer]) => answer.value > 0) // Only include questions with selected values
             .map(([questionId, answer]) => ({
-                questionId: Number(questionId),
+                question_id: Number(questionId),
                 value: answer.value,
-                comment: answer.comment || ''
+                content: answer.comment || ''
             }));
         console.log('Formatted Answers:', formattedAnswers);
 
-        // const response = await fetch(`http://localhost:3000/centers/${centerId}/answers`, {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        //     body: JSON.stringify({
-        //         centerId: centerId,
-        //         answers: formattedAnswers
-        //     })
-        // });
+        const response = await fetch(`https://patientvoice-backend.onrender.com/forms`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                center_id: centerId,
+                answers: formattedAnswers
+            })
+        });
+        console.log('Submission Response:', response);
+        if (!response.ok) {
+            throw new Error('Failed to submit form');
+        }
 
-        // if (!response.ok) {
-        //     throw new Error('Failed to submit form');
-        // }
-
-        // const result = await response.json();
-        // console.log('Form submitted successfully:', result);
+        const result = await response.json();
+        console.log('Form submitted successfully:', result);
 
         isSubmitting.value = false;
         router.push('/center/' + centerId);
