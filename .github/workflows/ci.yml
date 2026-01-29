@@ -104,27 +104,35 @@ jobs:
     if: github.event_name == 'push' && (github.ref == 'refs/heads/dev')
     steps:
       - name: Wait for deployment to stabilize
-        run: sleep 10
+        run: sleep 60  # Increased wait time
 
-      - name: Health check
+      - name: Health check with retries
         run: |
           echo "Testing backend health endpoint..."
-          response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/health || echo "000")
-          if [ "$response" != "200" ]; then
-            echo "::error::Health check failed with status code: $response"
-            exit 1
-          fi
-          echo "Health check passed ✓"
+          for i in {1..3}; do
+            response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/health 2>&1 || echo "000")
+            if [ "$response" = "200" ]; then
+              echo "Health check passed ✓"
+              break
+            else
+              echo "Attempt $i failed with status: $response. Retrying in 10s..."
+              sleep 10
+            fi
+            if [ $i -eq 3 ]; then
+              echo "::error::Health check failed after 3 attempts"
+              exit 1
+            fi
+          done
 
       - name: Test GET /centers endpoint
         run: |
           echo "Testing GET /centers endpoint..."
-          response=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/centers)
+          response=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/centers 2>&1)
           status_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | head -n-1)
 
           if [ "$status_code" != "200" ]; then
-            echo "::error::GET /centers failed with status code: $status_code"
+            echo "::error::GET /centers failed with status code: $status_code. Response: $body"
             exit 1
           fi
 
@@ -134,12 +142,12 @@ jobs:
       - name: Test GET /forms endpoint
         run: |
           echo "Testing GET /forms endpoint..."
-          response=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/forms)
+          response=$(curl -s -w "\n%{http_code}" ${{ secrets.RENDER_SERVICE_URL }}/forms 2>&1)
           status_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | head -n-1)
 
           if [ "$status_code" != "200" ]; then
-            echo "::error::GET /forms failed with status code: $status_code"
+            echo "::error::GET /forms failed with status code: $status_code. Response: $body"
             exit 1
           fi
 
