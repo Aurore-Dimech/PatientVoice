@@ -61,15 +61,16 @@
 import { useRoute } from 'vue-router';
 // @ts-expect-error import
 import Button from './components/Button.vue';
-import type { Center } from '@/assets/typings';
 const route = useRoute();
-const centerId = route.params.id as string;
-const getCenterFromId = async (uuid: string): Promise<Center> => {
+const centerId = route.params.id;
+const getCenterFromId = async (uuid: any): Promise<any> => {
     const response = await fetch(`https://patientvoice-backend.onrender.com/centers/${uuid}`);
     const data = await response.json()
+    console.log(data)
     return data;
 };
 const center = await getCenterFromId(centerId);
+console.log(center);
 const services = [
     "Kinésithérapie",
     "Rééducation neurologique",
