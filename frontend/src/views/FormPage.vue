@@ -108,11 +108,9 @@ const handleCommentChange = (questionId: number, comment: string) => {
 
 const themes = ref<Array<Theme>>([])
 const getThemes = async () => {
-    // const response = await fetch(`http://localhost:3000/centers/${centerId}/themes`)
-    const data = mockData
-    themes.value = data.Themes
-    // const data = await response.json()
-    console.log(data)
+    const response = await fetch(`https://patientvoice-backend.onrender.com/forms`)
+    const data = await response.json()
+    themes.value = data
 }
 getThemes()
 
