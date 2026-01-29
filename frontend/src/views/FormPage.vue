@@ -63,19 +63,16 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { Theme } from '@/assets/typings';
+import type { Center, Theme } from '@/assets/typings';
 
 const route = useRoute();
 const router = useRouter();
-const centerId = Number(route.params.id);
+const centerId = route.params.id as string;
 
-const getCenterFromId = (id: number): {name: string} => {
-    const centers: Record<number, {name: string}> = {
-        1: {name: 'Centre de Santé A'},
-        2: {name: 'Centre Médical B'},
-        3: {name: 'Clinique C'}
-    };
-    return centers[id] || {name: 'Centre Inconnu'};
+const getCenterFromId = async (uuid: string): Promise<Center> => {
+    const response = await fetch(`https://patientvoice-backend.onrender.com/centers/${uuid}`);
+    const data = await response.json()
+    return data;
 };
 
 type Answer = {
@@ -84,7 +81,7 @@ type Answer = {
 };
 const answers = ref<Record<number, Answer>>({});
 const isSubmitting = ref(false);
-const centre = getCenterFromId(centerId);
+const centre = await getCenterFromId(centerId);
 
 const handleRadioChange = (questionId: number, value: number) => {
     answers.value[questionId] = {
