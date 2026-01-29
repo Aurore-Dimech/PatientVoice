@@ -63,7 +63,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import mockData from '../assets/mockData'
 import type { Theme } from '@/assets/typings';
 
 const route = useRoute();
@@ -117,7 +116,6 @@ getThemes()
 const submit = async () => {
     try {
         isSubmitting.value = true;
-        
         // Format the answers for submission
         const formattedAnswers = Object.entries(answers.value)
             .filter(([_, answer]) => answer.value > 0) // Only include questions with selected values
@@ -145,14 +143,14 @@ const submit = async () => {
 
         // const result = await response.json();
         // console.log('Form submitted successfully:', result);
-        
+
+        isSubmitting.value = false;
         router.push('/center/' + centerId);
         
     } catch (error) {
         console.error('Error submitting form:', error);
-        alert('Error submitting form. Please try again.');
-    } finally {
         isSubmitting.value = false;
+        alert('Error submitting form. Please try again.');
     }
 }
 </script>
