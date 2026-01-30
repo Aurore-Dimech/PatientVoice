@@ -34,14 +34,16 @@
       <h2 class="text-2xl font-bold text-gray-900 mb-4">Services proposés</h2>
 
       <div class="flex flex-wrap gap-4">
-        <span
-          v-for="service in services"
-          :key="service"
-          class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold"
+        <button
+            v-for="specialty in center.specialties"
+            :key="specialty.id"
+            class="bg-cyan-100 text-cyan-700 px-4 py-2 rounded-lg font-semibold
+                focus-visible:outline-yellow-300 focus-visible:outline-4
+                focus-visible:bg-yellow-300 focus-visible:text-black"
         >
-          {{ service }}
-        </span>
-      </div>
+            {{ specialty.name }}
+        </button>
+</div>
     </div>
 
     <!-- CARTE -->
@@ -86,20 +88,16 @@ import Button from './components/Button.vue'
 const route = useRoute()
 const centerId = route.params.id as string
 
-const services = [
-  'Kinésithérapie',
-  'Rééducation neurologique',
-  'Rééducation orthopédique',
-  'Ergothérapie',
-  'Balnéothérapie',
-  'Réentrainement à l’effort',
-  'Suivi post-opératoire'
-]
+interface Specialty {
+  id: number
+  name: string
+}
 
 const center = ref({
   name: '',
   address: '',
-  cityZip: ''
+  cityZip: '',
+  specialties: [] as Specialty[]
 })
 
 const mapCenter = ref<[number, number] | null>(null)
@@ -115,7 +113,8 @@ onMounted(async () => {
   center.value = {
     name: data.name,
     address: data.address,
-    cityZip: `${data.postal_code} ${data.city}`
+    cityZip: `${data.postal_code} ${data.city}`,
+    specialties: data.specialties
   }
 
   const address = `${center.value.address}, ${center.value.cityZip}`
