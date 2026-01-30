@@ -21,6 +21,7 @@ app.use('/forms', formRoutes);
 
 sequelize.sync().then(() => {
   console.log('Database synced');
+  require('./models/associations');
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });

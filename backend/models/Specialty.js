@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Center = require('./Center');
 
 const Specialty = sequelize.define('Specialty', {
   id: {
@@ -15,13 +14,6 @@ const Specialty = sequelize.define('Specialty', {
 }, {
   tableName: 'specialties',
   timestamps: true,
-});
-
-Specialty.belongsToMany(Center, {
-  through: 'center_specialties',
-  foreignKey: 'specialty_id',
-  otherKey: 'center_id',
-  as: 'centers'
 });
 
 module.exports = Specialty;
