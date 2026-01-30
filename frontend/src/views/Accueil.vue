@@ -127,7 +127,7 @@ const getCenters = async () => {
         cityZip: `${center.postal_code} ${center.city}`,
         image: 'https://picsum.photos/320/140'
     }))
-
-    onMounted(getCenters)
 }
+onMounted(getCenters)
+
 </script>
