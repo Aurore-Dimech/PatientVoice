@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(cors({
-    origin: 'https://patientvoice-frontend.onrender.com',
+    origin: ['https://patientvoice-frontend.onrender.com', 'http://localhost'],
     methods: ['GET', 'POST', 'PUT'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));

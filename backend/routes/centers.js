@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 // GET /centers/:center
 router.get('/:center', async (req, res) => {
   try {
-    const center = await Center.findByPk(req.params.id, {
+    const center = await Center.findByPk(req.params.center, {
       include: [{
         model: require('../models/Specialty'),
         as: 'specialties',
