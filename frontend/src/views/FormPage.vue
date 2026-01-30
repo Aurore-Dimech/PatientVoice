@@ -1,6 +1,6 @@
 <template>
     <div class="bg-gray-50 min-h-screen p-8">
-        <h2 class="text-2xl font-bold mb-4 focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none rounded px-2 py-1" tabindex="0">Questionnaire : {{ centre.name }}</h2>
+        <h2 class="text-2xl font-bold mb-4 focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none rounded px-2 py-1" tabindex="0">Questionnaire : {{ centre?.name || '' }}</h2>
         <form @submit.prevent="submit">
             <fieldset v-for="theme in themes" :key="theme.name" class="bg-white border-2 border-cyan-700/100 rounded-xl p-8 mb-6">
                 <legend class="px-6 text-xl font-semibold focus-visible:outline-yellow-300 focus-visible:outline-4 focus-visible:shadow-none rounded" tabindex="0">
@@ -69,11 +69,6 @@ const route = useRoute();
 const router = useRouter();
 const centerId = route.params.id as string;
 
-const getCenterFromId = async (uuid: string): Promise<Center> => {
-    const response = await fetch(`https://patientvoice-backend.onrender.com/centers/${uuid}`);
-    const data = await response.json()
-    return data;
-};
 
 type Answer = {
     value: number;
@@ -81,8 +76,15 @@ type Answer = {
 };
 const answers = ref<Record<number, Answer>>({});
 const isSubmitting = ref(false);
-const centre = await getCenterFromId(centerId);
+const centre = ref<Center>();
 
+const getCenterFromId = async (uuid: string): Promise<Center> => {
+    const response = await fetch(`https://patientvoice-backend.onrender.com/centers/${uuid}`);
+    const data = await response.json()
+    centre.value = data
+    return data;
+};
+getCenterFromId(centerId);
 const handleRadioChange = (questionId: number, value: number) => {
     answers.value[questionId] = {
         value: value,
