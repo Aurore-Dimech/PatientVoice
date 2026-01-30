@@ -59,8 +59,10 @@
                     <l-marker :lat-lng="mapCenter" />
                 </l-map>
             </div>
+            <p v-else>Chargement de la carte…</p>
+        </div>
 
-
+        <div class="mb-8">
             <Button :to="`/form/${centerId}`" size="lg" variant="primary" block>
                 Accéder au formulaire
             </Button>
