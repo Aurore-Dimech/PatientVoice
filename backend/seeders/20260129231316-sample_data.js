@@ -2,6 +2,16 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const themesCount = await queryInterface.sequelize.query(
+      'SELECT COUNT(*) as count FROM themes;',
+      { type: Sequelize.QueryTypes.SELECT }
+    );
+    
+    if (themesCount[0].count > 0) {
+      console.log('Database already has data. Skipping seeder.');
+      return;
+    }
+
     await queryInterface.bulkInsert('themes', [
       { name: 'Accueil au centre', createdAt: new Date() },
       { name: 'Qualité des soins', createdAt: new Date()},
@@ -158,7 +168,17 @@ module.exports = {
       });
     });
 
-    await queryInterface.bulkInsert('center_specialties', centerSpecialties);
+    const existing = await queryInterface.sequelize.query(
+      'SELECT center_id, specialty_id FROM center_specialties;',
+      { type: Sequelize.QueryTypes.SELECT }
+    );
+    const existingKeys = new Set(existing.map(e => `${e.center_id}-${e.specialty_id}`));
+
+    const filteredCenterSpecialties = centerSpecialties.filter(
+      cs => !existingKeys.has(`${cs.center_id}-${cs.specialty_id}`)
+    );
+
+    await queryInterface.bulkInsert('center_specialties', filteredCenterSpecialties);
   },
 
   async down(queryInterface, Sequelize) {
