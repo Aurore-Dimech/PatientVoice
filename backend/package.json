@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "migrate": "sequelize-cli --config config/config.js db:migrate"
+    "migrate": "sequelize-cli --config config/config.js db:migrate",
+    "seed": "sequelize-cli db:seed:all --config config/config.js",
+    "seed:undo": "sequelize-cli db:seed:undo:all --config config/config.js"
   },
   "dependencies": {
     "express": "^5.2.1",

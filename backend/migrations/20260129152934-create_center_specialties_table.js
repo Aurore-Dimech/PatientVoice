@@ -27,12 +27,11 @@ module.exports = {
         type: Sequelize.DATE
       },
       updatedAt: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE
       }
     });
 
-    // Add composite primary key
     await queryInterface.addIndex('center_specialties', ['center_id', 'specialty_id'], {
       unique: true
     });
