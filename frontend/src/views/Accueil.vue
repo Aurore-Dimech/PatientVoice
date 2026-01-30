@@ -17,17 +17,17 @@
 
     <!-- CENTRES -->
     <section class="mb-40">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-center">
-        <CenterCard
-          v-for="center in centers.slice(0, 3)"
-          :key="center.id"
-          :id="center.id"
-          :name="center.name"
-          :address="center.address"
-          :cityZip="center.cityZip"
-          :image="center.image"
-        />
-      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <CenterCard
+                v-for="center in centers.slice(0, 3)"
+                :key="center.id"
+                :id="center.id"
+                :name="center.name"
+                :address="center.address"
+                :cityZip="center.cityZip"
+                :image="center.image"
+            />
+        </div>
 
       <div class="flex justify-center mt-8">
         <Button
@@ -132,17 +132,13 @@ const getCenters = async () => {
   const response = await fetch('https://patientvoice-backend.onrender.com/centers')
   const data = await response.json()
 
-  console.log('DATA BRUTE', data)
-  console.log('CENTRES', data.Centres)
-
-  centers.value = data.Centres.map((center: CenterApi) => ({
+  centers.value = data.map((center: CenterApi) => ({
     id: center.id,
     name: center.name,
     address: center.address,
     cityZip: `${center.postal_code} ${center.city}`,
-    image: 'https://picsum.photos/400/200'
+    image: 'https://picsum.photos/320/140'
   }))
-}
 
 onMounted(getCenters)
 </script>
